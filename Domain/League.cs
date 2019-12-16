@@ -11,15 +11,17 @@ namespace Domain
     public class League
     {
         [Key]
-        public int LueguaId { get; set; }
+        public int LeagueId { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
         [MaxLength(50, ErrorMessage = "The maximun lenght for field {0} is {1} characteres")]
-        [Index("Lueague_Name_Index", IsUnique = true)]
+        [Index("League_Name_Index", IsUnique = true)]
         [Display(Name = "League")]
         public string Name { get; set; }
 
         [DataType(DataType.ImageUrl)]
         public string Logo { get; set; }
+
+        public ICollection<Team> Teams { get; set; }
     }
 }

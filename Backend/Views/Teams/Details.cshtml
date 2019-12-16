@@ -1,4 +1,4 @@
-﻿@model Domain.League
+﻿@model Domain.Team
 
 @{
     ViewBag.Title = "Details";
@@ -7,9 +7,17 @@
 <h2>Details</h2>
 
 <div>
-    <h4>League</h4>
+    <h4>Team</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.League.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.League.Name)
+        </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
@@ -26,9 +34,17 @@
             @Html.DisplayFor(model => model.Logo)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.Initials)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Initials)
+        </dd>
+
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.LeagueId }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TeamId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
