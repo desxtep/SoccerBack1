@@ -99,8 +99,8 @@ namespace Backend.Controllers
                 return HttpNotFound();
             }
             ViewBag.LeagueId = new SelectList(db.Leagues, "LeagueId", "Name", team.LeagueId);
-            var view = Toview(team); 
-            return View(team);
+            var view = Toview(team);
+            return View(view);
         }
 
         private TeamView Toview(Team team)
