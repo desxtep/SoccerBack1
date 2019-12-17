@@ -9,151 +9,115 @@ using System.Web;
 using System.Web.Mvc;
 using Backend.Models;
 using Domain;
-using Backend.Helpers;
 
 namespace Backend.Controllers
 {
-    public class LeaguesController : Controller
+    public class TournamentGroupsController : Controller
     {
         private DataContextLocal db = new DataContextLocal();
 
-        // GET: Leagues
+        // GET: TournamentGroups
         public async Task<ActionResult> Index()
         {
-            return View(await db.Leagues.ToListAsync());
+            var tournamentGroups = db.TournamentGroups.Include(t => t.Tournament);
+            return View(await tournamentGroups.ToListAsync());
         }
 
-        // GET: Leagues/Details/5
+        // GET: TournamentGroups/Details/5
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            League league = await db.Leagues.FindAsync(id);
-            if (league == null)
+            TournamentGroup tournamentGroup = await db.TournamentGroups.FindAsync(id);
+            if (tournamentGroup == null)
             {
                 return HttpNotFound();
             }
-            return View(league);
+            return View(tournamentGroup);
         }
 
-        // GET: Leagues/Create
+        // GET: TournamentGroups/Create
         public ActionResult Create()
         {
+            ViewBag.TournamentId = new SelectList(db.Tournaments, "TournamentId", "Name");
             return View();
         }
 
-        // POST: Leagues/Create
+        // POST: TournamentGroups/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(LeagueView view)
+        public async Task<ActionResult> Create([Bind(Include = "TournamentGroupId,Name,TournamentId")] TournamentGroup tournamentGroup)
         {
             if (ModelState.IsValid)
             {
-                var pic = string.Empty;
-                var folder = "~/Content/Logos";
-                if (view.LogoFile != null)
-                {
-                    pic = FilesHelper.UploadPhoto(view.LogoFile, folder);
-                    pic = string.Format("{0}/{1}", folder, pic);
-                }
-                var league = ToLeague(view);
-               league.Logo = pic;
-                db.Leagues.Add(league);
+                db.TournamentGroups.Add(tournamentGroup);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(view);
+            ViewBag.TournamentId = new SelectList(db.Tournaments, "TournamentId", "Name", tournamentGroup.TournamentId);
+            return View(tournamentGroup);
         }
 
-        private League ToLeague(LeagueView view)
-        {
-            return new League
-            {
-                LeagueId = view.LeagueId,
-                Logo = view.Logo,
-                Name = view.Name,
-                Teams = view.Teams
-            };
-        }
-
-        // GET: Leagues/Edit/5
+        // GET: TournamentGroups/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var league = await db.Leagues.FindAsync(id);
-            if (league == null)
+            TournamentGroup tournamentGroup = await db.TournamentGroups.FindAsync(id);
+            if (tournamentGroup == null)
             {
                 return HttpNotFound();
             }
-            var view = Toview(league);
-            return View(view);
+            ViewBag.TournamentId = new SelectList(db.Tournaments, "TournamentId", "Name", tournamentGroup.TournamentId);
+            return View(tournamentGroup);
         }
 
-        private LeagueView Toview(League league)
-        {
-            return new LeagueView{
-                LeagueId = league.LeagueId,
-                Logo = league.Logo,
-                Name = league.Name,
-                Teams = league.Teams
-            };
-        }
-
-        // POST: Leagues/Edit/5
+        // POST: TournamentGroups/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(LeagueView view)
+        public async Task<ActionResult> Edit([Bind(Include = "TournamentGroupId,Name,TournamentId")] TournamentGroup tournamentGroup)
         {
             if (ModelState.IsValid)
             {
-                var pic = view.Logo;
-                var folder = "~/Content/Logos";
-                if (view.LogoFile != null)
-                {
-                    pic = FilesHelper.UploadPhoto(view.LogoFile, folder);
-                    pic = string.Format("{0}/{1}", folder, pic);
-                }
-                var league = ToLeague(view);
-                league.Logo = pic;
-                db.Entry(league).State = EntityState.Modified;
+                db.Entry(tournamentGroup).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(view);
+            ViewBag.TournamentId = new SelectList(db.Tournaments, "TournamentId", "Name", tournamentGroup.TournamentId);
+            return View(tournamentGroup);
         }
 
-        // GET: Leagues/Delete/5
+        // GET: TournamentGroups/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            League league = await db.Leagues.FindAsync(id);
-            if (league == null)
+            TournamentGroup tournamentGroup = await db.TournamentGroups.FindAsync(id);
+            if (tournamentGroup == null)
             {
                 return HttpNotFound();
             }
-            return View(league);
+            return View(tournamentGroup);
         }
 
-        // POST: Leagues/Delete/5
+        // POST: TournamentGroups/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            League league = await db.Leagues.FindAsync(id);
-            db.Leagues.Remove(league);
+            TournamentGroup tournamentGroup = await db.TournamentGroups.FindAsync(id);
+            db.TournamentGroups.Remove(tournamentGroup);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

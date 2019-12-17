@@ -29,6 +29,7 @@ namespace Domain
 
         [Index("Team_Name_LeagueId_Index", IsUnique = true, Order = 2)]
         [Index("Team_Initials_LeagueId_Index", IsUnique = true, Order = 2)]
+        [Display(Name = "League")]
         public int LeagueId { get; set; }
 
         public virtual League League  { get; set; }

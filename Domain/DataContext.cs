@@ -21,6 +21,10 @@ namespace Domain
         }
 
 
+        public System.Data.Entity.DbSet<Domain.Tournament> Tournaments { get; set; }
+
+        public System.Data.Entity.DbSet<Domain.TournamentGroup> TournamentGroups { get; set; }
+
         public System.Data.Entity.DbSet<Domain.League> Leagues { get; set; }
 
         public System.Data.Entity.DbSet<Domain.Team> Teams { get; set; }
